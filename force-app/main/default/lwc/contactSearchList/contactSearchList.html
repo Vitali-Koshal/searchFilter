@@ -1,0 +1,18 @@
+<template>
+    <lightning-card>
+        <div class="searchForm">
+            <h1>search by name</h1>
+        <lightning-button variant="brand" label="FILTER" onclick={handleClickFilterButton}></lightning-button>
+        <lightning-input 
+            type="text" 
+            onchange={handleSearchContact} 
+            class="slds-size_1-of-8 slds-m-bottom_medium">
+        </lightning-input>
+    </div>
+        <lightning-datatable
+            key-field="Id"
+            data={records}
+            columns={columns}>
+        </lightning-datatable>
+    </lightning-card>
+</template>
