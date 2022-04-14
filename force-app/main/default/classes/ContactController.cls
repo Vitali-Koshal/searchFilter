@@ -1,7 +1,5 @@
 public with sharing class ContactController {
-    public ContactController() {
-
-    }
+  
     @AuraEnabled(cacheable = true)
     public static List<Contact> getContacts(String searchValue) {
         String searchPatern = '%' + searchValue + '%';
@@ -11,5 +9,14 @@ public with sharing class ContactController {
             WHERE FirstName LIKE :searchPatern
             ORDER BY FirstName
             ];
+    }
+    @AuraEnabled
+    public static void deleteContact(String idValue){
+        try {
+            List<Contact> contacts=[SELECT Id, FirstName FROM Contact WHERE Id = :idValue ];
+            delete contacts;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 }

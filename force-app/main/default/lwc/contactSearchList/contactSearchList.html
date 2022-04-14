@@ -1,18 +1,60 @@
 <template>
     <lightning-card>
         <div class="searchForm">
-            <h1>search by name</h1>
-        <lightning-button variant="brand" label="FILTER" onclick={handleClickFilterButton}></lightning-button>
-        <lightning-input 
-            type="text" 
-            onchange={handleSearchContact} 
-            class="slds-size_1-of-8 slds-m-bottom_medium">
-        </lightning-input>
-    </div>
+            <table>
+                <tr>
+                   
+                </tr>
+                <tr>
+                    <td width="150px">
+                        <h2>search by name {openCreateNewModal}</h2>
+                    </td>
+                    <td width="100px">
+                        <lightning-input class="slds-m-bottom_medium" type="text" onchange={handleSearchContact}></lightning-input>    
+                    </td>
+                    <td align="left">
+                        <lightning-button icon-name="utility:filterList" variant="brand" label="Filter" onclick={handleClickFilterButton} class="slds-m-left_small"></lightning-button>          
+                    </td>
+                    <td align="right" width="180px">
+                        <h2>create new contact</h2>
+                    </td>
+                    <td align="right" width="50px">
+                        <lightning-button variant="success" label="New" onclick={handleClickNewButton} class="slds-m-right_small"></lightning-button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+   
+          
         <lightning-datatable
             key-field="Id"
             data={records}
-            columns={columns}>
+            columns={columns}
+            onrowaction={handleRowAction}
+            hide-checkbox-column="true">
         </lightning-datatable>
+
+        <!--Delete modal window-->
+        <div>
+            <c-delete-window 
+                open-modal={deleteRecordModalWindow} 
+                ondeleterecordwindow={handleDeleteModalWindow}
+                record-id={recordId}
+                contact-name={contactName}
+                onrefreshwindowafterdelete={handelRefreshWindowAfterDelete}>
+            </c-delete-window>
+        </div>
+        <!---->
+
+        <!--Create new contact modal window -->
+        <div>
+            <c-create-new-contact-window 
+            open-create-new-modal={openCreateNewModal}
+            oncreatenewcontactcancelbutton={handelCreateNewContactCancelButton}>
+
+            </c-create-new-contact-window>
+        </div>
+        <!---->
+
     </lightning-card>
 </template>

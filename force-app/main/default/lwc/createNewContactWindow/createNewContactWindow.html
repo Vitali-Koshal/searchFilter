@@ -1,0 +1,28 @@
+<template>
+    <template if:true={openCreateNewModal}>  
+      <div class="slds-modal slds-fade-in-open slds-backdrop">  
+        <div class="slds-modal__container">  
+          <!------HEADER Section-->  
+          <div class="slds-modal__header">  
+            <lightning-button-icon icon-name="utility:close" alternative-text="Close this window" size="large"  
+              variant="bare-inverse" onclick={handleCloseButton} class="slds-modal__close">  
+            </lightning-button-icon>  
+            <h2>{temp}</h2>  
+          </div>  
+          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <p><b>
+              </b></p>
+            <p><b>This paradigm is used in cases such as the creation or editing of a record, as well as various types of messaging and wizards.
+              </b></p>
+          </div>
+          <!------Footer Section-->  
+          <div class="slds-modal__footer"> 
+            <lightning-button icon-name="utility:save" label="Save" variant="brand" onclick={handleSaveButton} class="slds-m-right_small">  
+            </lightning-button>  
+            <lightning-button icon-name="utility:close" label="Cancel" variant="neutral" onclick={handleCancelButton}>  
+            </lightning-button>  
+          </div>  
+        </div>  
+      </div>  
+    </template>     
+  </template>
