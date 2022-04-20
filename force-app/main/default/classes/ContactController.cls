@@ -19,4 +19,27 @@ public with sharing class ContactController {
             throw new AuraHandledException(e.getMessage());
         }
     }
+
+    @AuraEnabled 
+    public static void createContact(String firstName, String lastName, String email, String accountId, String mobile) {
+        Contact contact = new Contact (
+                                        FirstName = firstName, 
+                                        LastName = lastName, 
+                                        Email = email,
+                                        MobilePhone = mobile,
+                                        AccountId = accountId
+                                        );
+        insert contact;
+    }
+    @AuraEnabled(cacheable = true) 
+    public static List<Account> getAccounts(String searchValue) {
+        String searchPatern = '%' + searchValue + '%';
+        return [
+            SELECT Id, Name
+            FROM Account
+            WHERE Name LIKE :searchPatern
+            ORDER BY Name
+            //LIMIT 5
+            ];
+    }
 }

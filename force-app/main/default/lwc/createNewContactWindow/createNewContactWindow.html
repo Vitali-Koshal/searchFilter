@@ -1,28 +1,180 @@
+
 <template>
-    <template if:true={openCreateNewModal}>  
-      <div class="slds-modal slds-fade-in-open slds-backdrop">  
-        <div class="slds-modal__container">  
-          <!------HEADER Section-->  
-          <div class="slds-modal__header">  
-            <lightning-button-icon icon-name="utility:close" alternative-text="Close this window" size="large"  
-              variant="bare-inverse" onclick={handleCloseButton} class="slds-modal__close">  
-            </lightning-button-icon>  
-            <h2>{temp}</h2>  
-          </div>  
-          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-            <p><b>
-              </b></p>
-            <p><b>This paradigm is used in cases such as the creation or editing of a record, as well as various types of messaging and wizards.
-              </b></p>
-          </div>
-          <!------Footer Section-->  
-          <div class="slds-modal__footer"> 
-            <lightning-button icon-name="utility:save" label="Save" variant="brand" onclick={handleSaveButton} class="slds-m-right_small">  
-            </lightning-button>  
-            <lightning-button icon-name="utility:close" label="Cancel" variant="neutral" onclick={handleCancelButton}>  
-            </lightning-button>  
-          </div>  
-        </div>  
-      </div>  
-    </template>     
-  </template>
+    <template if:true={openCreateNewModal}>
+        <div class="slds-modal slds-fade-in-open slds-backdrop">
+            <div class="slds-modal__container">
+                <!------HEADER Section-->
+                <div class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close" alternative-text="Close this window" size="large"
+                        variant="bare-inverse" onclick={handleCancelButton} class="slds-modal__close">
+                    </lightning-button-icon>
+                    <h1>Creating new contact form</h1>
+                </div>
+                <!--content-->
+                <div 
+                    class="slds-modal__content slds-p-around_medium" 
+                    id="modal-content-id-1" 
+                    style=" overflow: visible; overflow-y: visible"
+                     >
+                    <lightning-card title="Contact Detail">
+                        <lightning-record-edit-form object-api-name="Contact">
+                            <lightning-input 
+                                name="firstName" 
+                                class="validate" 
+                                label="First Name" 
+                                type="text" 
+                                value={firstNameValue} 
+                                onchange={handleFirstNameField}>
+                            </lightning-input>
+                            <lightning-input 
+                                name="lastName" 
+                                class="validate" 
+                                label="Last Name" 
+                                type="text" 
+                                value={lastNameValue}
+                                onchange={handleLastNameField} 
+                                required>
+                            </lightning-input>
+                            <lightning-input 
+                                name="email" 
+                                class="validate" 
+                                label="Email" 
+                                type="email" 
+                                value={emailValue} 
+                                onchange={handleEmailField} 
+                                pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" 
+                                message-when-pattern-mismatch="Please enter a valid mail adress 
+                                                                (format x...xx@x...xx.xxx)"
+                                required>
+                            </lightning-input>
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-combobox_container">   
+                                        <div 
+                                            class={txtclassname} 
+                                            data-id="resultBox" 
+                                            aria-expanded="false" 
+                                            aria-haspopup="listbox" 
+                                            role="combobox">
+                                            <div class="slds-form-element__control 
+                                                        slds-input-has-icon 
+                                                        slds-input-has-icon 
+                                                        slds-input-has-icon_left-right" 
+                                                role="none">
+                                                <lightning-input 
+                                                    read-only={inputReadOnly} 
+                                                    data-id="userinput" 
+                                                    label="Account Name" 
+                                                    name="searchText" 
+                                                    onchange={searchField} 
+                                                    value={selectRecordName} 
+                                                    class="leftspace">
+                                                </lightning-input> 
+                                                <div if:true={iconFlag}>
+                                                    <span class="slds-icon_container 
+                                                                slds-icon-utility-search 
+                                                                slds-input__icon 
+                                                                slds-input__icon_right">
+                                                        <lightning-icon 
+                                                            class="slds-icon slds-icon_small slds-icon-text-default" 
+                                                            icon-name="utility:search" 
+                                                            size="x-small" 
+                                                            alternative-text="icon" >
+                                                        </lightning-icon>
+                                                    </span> 
+                                                </div>
+                                                <div if:true={clearIconFlag}>
+                                                    <button class="slds-input__icon 
+                                                                    slds-input__icon_right 
+                                                                    slds-button slds-button_icon 
+                                                                    iconheight" 
+                                                            onclick={resetData}>
+                                                        <lightning-icon class="slds-icon 
+                                                                                slds-icon_small 
+                                                                                slds-icon-text-default" 
+                                                                        icon-name="utility:clear" 
+                                                                        size="x-small" 
+                                                                        alternative-text="icon" >
+                                                        </lightning-icon>
+                                                        <span class="slds-assistive-text">Clear</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                                        
+                                            <!-- Second part display result -->
+                                            <div 
+                                                id="listbox-id-1" 
+                                                class="slds-dropdown 
+                                                        slds-dropdown_length-with-icon-7 
+                                                        slds-dropdown_fluid" 
+                                                role="listbox">
+                                                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                    <template for:each={searchRecords} for:item="serecord">
+                                                        <li role="presentation" 
+                                                            class="slds-listbox__item" 
+                                                            key={serecord.Id}>
+                                                            <div 
+                                                                data-id={serecord.Id} 
+                                                                data-name={serecord.Name} 
+                                                                onclick={setSelectedRecord} 
+                                                                class="slds-media slds-listbox__option 
+                                                                        slds-listbox__option_entity 
+                                                                        slds-listbox__option_has-meta" 
+                                                                role="option">
+                                                                <span class="slds-media__body">
+                                                                    <span class="slds-listbox__option-text 
+                                                                                slds-listbox__option-text_entity">
+                                                                        {serecord.Name}
+                                                                    </span>
+                                                                    <span class="slds-listbox__option-meta 
+                                                                                slds-listbox__option-meta_entity">
+                                                                        Account ID • {serecord.Id}
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </li>
+                                                    </template>
+                                                </ul>
+                                            </div> 
+                                            <div if:true={messageFlag}>No result found.</div>
+                                            <div if:true={LoadingText}>Loading...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <lightning-input 
+                                            name="mobilePhone"
+                                            class="validate"
+                                            label="Mobile Phone" 
+                                            type="text" 
+                                            value={mobileValue} 
+                                            onchange={handleMobilePhoneField} 
+                                            pattern="[+]{1}[0-9]{3}-[0-9]{2}-[0-9]{7}$" 
+                                            message-when-pattern-mismatch="Please enter a valid phone number
+                                                                         (format +xxx-xx-xxxxxxx)"
+                                            required>
+                            </lightning-input>
+                        </lightning-record-edit-form>
+                    </lightning-card>
+                </div>
+                
+                <!------Footer Section-->
+                <div class="slds-modal__footer">
+                    <lightning-button 
+                        icon-name="utility:save" 
+                        label="Save" 
+                        variant="brand" 
+                        onclick={handleSaveButton}
+                        class="slds-m-right_small">
+                    </lightning-button>
+                    <lightning-button 
+                        onclick={handleCancelButton} 
+                        icon-name="utility:close" 
+                        label="Cancel" 
+                        variant="neutral">
+                    </lightning-button>
+                </div>
+            </div>
+        </div>
+    </template>
+</template>

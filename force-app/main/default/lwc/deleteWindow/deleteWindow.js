@@ -1,7 +1,7 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import deleteContact from '@salesforce/apex/ContactController.deleteContact';
 export default class DeleteWindow extends LightningElement {
-    @api openModal;
+    @api openDeleteModal;
     @api recordId; 
     @api contactName;
 
@@ -11,11 +11,10 @@ export default class DeleteWindow extends LightningElement {
         this.dispatchEvent(deleteWindowEvent);
     }
     handleDeleteButton() {
-        //deleteContact({idValue: this.recordId});
+        deleteContact({idValue: this.recordId});
         this.handleCancelButton();
-        const refreshWindowEvent = new CustomEvent("refreshwindowafterdelete", {});
-        //dispatches the event
-        this.dispatchEvent(refreshWindowEvent);
+        const deleteContactEvent = new CustomEvent("deletecontactaction", {});
+        this.dispatchEvent(deleteContactEvent);
         
     }
 }

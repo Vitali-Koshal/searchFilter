@@ -3,29 +3,36 @@
         <div class="searchForm">
             <table>
                 <tr>
-                   
-                </tr>
-                <tr>
                     <td width="150px">
-                        <h2>search by name {openCreateNewModal}</h2>
+                        <h2>search by name</h2>
                     </td>
                     <td width="100px">
-                        <lightning-input class="slds-m-bottom_medium" type="text" onchange={handleSearchContact}></lightning-input>    
+                        <lightning-input class="input_field slds-m-bottom_medium" type="text">
+                        </lightning-input>    
                     </td>
                     <td align="left">
-                        <lightning-button icon-name="utility:filterList" variant="brand" label="Filter" onclick={handleClickFilterButton} class="slds-m-left_small"></lightning-button>          
+                        <lightning-button 
+                            icon-name="utility:filterList" 
+                            variant="brand" 
+                            label="Filter" 
+                            onclick={handleClickFilterButton} 
+                            class="slds-m-left_small">
+                        </lightning-button>          
                     </td>
                     <td align="right" width="180px">
                         <h2>create new contact</h2>
                     </td>
                     <td align="right" width="50px">
-                        <lightning-button variant="success" label="New" onclick={handleClickNewButton} class="slds-m-right_small"></lightning-button>
+                        <lightning-button 
+                            variant="success" 
+                            label="New" 
+                            onclick={handleClickNewButton} 
+                            class="slds-m-right_small">
+                        </lightning-button>
                     </td>
                 </tr>
             </table>
         </div>
-   
-          
         <lightning-datatable
             key-field="Id"
             data={records}
@@ -37,11 +44,11 @@
         <!--Delete modal window-->
         <div>
             <c-delete-window 
-                open-modal={deleteRecordModalWindow} 
+                open-delete-modal={deleteRecordModalWindow} 
                 ondeleterecordwindow={handleDeleteModalWindow}
                 record-id={recordId}
                 contact-name={contactName}
-                onrefreshwindowafterdelete={handelRefreshWindowAfterDelete}>
+                ondeletecontactaction={handleDeleteContactAction}>
             </c-delete-window>
         </div>
         <!---->
@@ -50,8 +57,8 @@
         <div>
             <c-create-new-contact-window 
             open-create-new-modal={openCreateNewModal}
-            oncreatenewcontactcancelbutton={handelCreateNewContactCancelButton}>
-
+            oncreatenewcontactcancelbutton={handleCreateNewContactCancelButton}
+            oncreatecontactaction={handleCreateContactAction}>
             </c-create-new-contact-window>
         </div>
         <!---->

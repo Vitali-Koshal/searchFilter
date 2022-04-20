@@ -20,37 +20,34 @@ const COLUMNS = [
         typeAttributes: { day: "numeric", month: "numeric", year: "numeric", hour: "2-digit", minute: "numeric" }
     },
     { type:"button", typeAttributes: {
-        class: 'greenButton',
-        label: 'Delete',
-        title: 'Delete',
-        value: 'delete',
-        variant: 'brand',
-        iconPosition: 'right',
-        }
+                                        class: 'greenButton',
+                                        label: 'Delete',
+                                        title: 'Delete',
+                                        value: 'delete',
+                                        variant: 'brand',
+                                        iconPosition: 'right',
+                                    }
     }
 ];
 export default class ContactSearchList extends LightningElement {
-    columns = COLUMNS;
-    searchValue = '';
-    inputValue = '';
-    records;
+    columns = COLUMNS; //table columns
+    searchValue = ''; //search input field value
+    records; //contacts records data
     error;
-    deleteRecordModalWindow = false;
-    recordId;
-    contactName;
-    tempRecords;
-    @track refreshTable;
+    deleteRecordModalWindow = false; //delete modal window state value: close-false, open-true
+    recordId;   //Contact Id to delete record 
+    contactName;  //Deleting Contact full name (FirstName + Last Name)
+    @track refreshTable; 
+    openCreateNewModal = false; //create new modal window state value: close-false, open-true
+    temp;
 
-    openCreateNewModal = false;
-
-    temp = 'her';
     @wire(getContacts, {searchValue: '$searchValue'})
     wiredContacts (response) {
         this.refreshTable = response;
         const {data, error} = response;
         if (data) {
-            this.tempRecords = data;
-            this.tempRecords = this.tempRecords.map( row => {
+            this.records = data;
+            this.records = this.records.map( row => {
                 return { 
                     FIRST_NAME: row.FirstName,
                     LAST_NAME: row.LastName,
@@ -62,16 +59,13 @@ export default class ContactSearchList extends LightningElement {
                     AccountURL: (row.AccountId === undefined ? '' : '/lightning/r/Account/' + row.AccountId + '/view')
                  };
             })
-            this.records = this.tempRecords;
         }
      
     }
+    
 
-    handleSearchContact(event) { 
-        this.inputValue = event.target.value;
-    }
     handleClickFilterButton() { 
-        this.searchValue = this.inputValue;
+        this.searchValue = this.template.querySelector('.input_field').value;
     }
 
     handleRowAction(event) {
@@ -82,27 +76,40 @@ export default class ContactSearchList extends LightningElement {
     handleDeleteModalWindow() {
         this.deleteRecordModalWindow = false;
     }
-    handelRefreshWindowAfterDelete() {
+    handleDeleteContactAction() {
         clearTimeout(this.timeoutId);
-        this.timeoutId = setTimeout(this.refreshData.bind(this), 500); 
-    }
-    refreshData() {
-        this.temp = 'refresh after delete';
-        refreshApex(this.refreshTable);
+        this.timeoutId = setTimeout(this.refreshData.bind(this), 1000); 
         const toastEvent = new ShowToastEvent({
             title: "Contact deleted",
             message: "Record ID: " + this.recordId + ' Contact name: ' + this.contactName,
             variant: "info"
             });
-            this.dispatchEvent(toastEvent);
+        this.dispatchEvent(toastEvent);
+    }
+    refreshData() {
+        refreshApex(this.refreshTable);
+        
     }
 
     //create new contact method
     handleClickNewButton() {
         this.openCreateNewModal = true;
     }
-    handelCreateNewContactCancelButton() {
+    handleCreateNewContactCancelButton() {
         this.openCreateNewModal = false;
+    }
+    handleCreateContactAction(event) {
+        this.searchValue = '';
+        this.template.querySelector('.input_field').value = '';
+        this.contactName = event.detail;
+        clearTimeout(this.timeoutId);
+        this.timeoutId = setTimeout(this.refreshData.bind(this), 1000); 
+        const toastEvent = new ShowToastEvent({
+            title: 'Contact created',
+            message: ' Contact name: ' + this.contactName,
+            variant: 'success'
+            });
+        this.dispatchEvent(toastEvent);
     }
     
 }
